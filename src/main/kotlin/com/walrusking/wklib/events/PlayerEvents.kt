@@ -6,6 +6,8 @@ import com.hypixel.hytale.server.core.entity.entities.Player
 import com.hypixel.hytale.server.core.event.events.player.*
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import com.walrusking.wklib.components.Components
+import com.walrusking.wklib.helpers.ensureAndGetComponent
+import com.walrusking.wklib.helpers.getWorld
 
 class PlayerEvents {
 	companion object {
@@ -45,12 +47,12 @@ class WKPlayerReadyEvent(
 	readyId: Int
 ) : PlayerReadyEvent(ref, player, readyId) {
 	val store = playerRef.store
-	val world = store.externalData.world
+	val world = playerRef.getWorld()
 
 	fun <T : Component<EntityStore>> ensureAndGetComponent(componentId: String): T {
 		val type = Components.getType<T>(componentId)
 			?: throw IllegalArgumentException("$\"${componentId}\" component type not registered!")
 
-		return store.ensureAndGetComponent<T>(playerRef, type)
+		return playerRef.ensureAndGetComponent(type)
 	}
 }
