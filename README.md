@@ -103,13 +103,6 @@ class ExampleComponent(var exampleField: String) : WKComponent<ExampleComponent>
 	override fun clone(): ExampleComponent {
 		return ExampleComponent(exampleField)
 	}
-
-	override fun buildCodec(
-		fieldName: String,
-		field: BuilderField.FieldBuilder<out Any?, in Any, out BuilderCodec.BuilderBase<out Any?, *>?>
-	) {
-
-	}
 }
 
 class ExampleSystem(componentType: ComponentType<EntityStore, ExampleComponent>) :
