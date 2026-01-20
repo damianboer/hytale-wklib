@@ -1,0 +1,23 @@
+{
+    "Group": "com.walrusking.wklib",
+    "Name": "WKLib",
+    "Version": "1.0.0",
+    "Description": "A library.",
+    "Main": "com.walrusking.wklib.WKLib",
+    "Authors": [
+        {
+            "Name": "Walrusking",
+            "Email": "",
+            "Url": ""
+        }
+    ],
+    "ServerVersion": "*",
+    "Dependencies": {
+        
+    },
+    "OptionalDependencies": {
+        
+    },
+    "IncludesAssetPack": true,
+    "DisabledByDefault": false
+}
