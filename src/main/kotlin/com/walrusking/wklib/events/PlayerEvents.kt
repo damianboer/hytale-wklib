@@ -4,6 +4,7 @@ import com.hypixel.hytale.component.Component
 import com.hypixel.hytale.component.Ref
 import com.hypixel.hytale.server.core.entity.entities.Player
 import com.hypixel.hytale.server.core.event.events.player.*
+import com.hypixel.hytale.server.core.universe.PlayerRef
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 import com.walrusking.wklib.components.Components
 import com.walrusking.wklib.helpers.ensureAndGetComponent
@@ -26,6 +27,16 @@ class PlayerEvents {
 
 		fun onPlayerDisconnect(event: PlayerDisconnectEvent) =
 			Events.onPlayerDisconnect.runHandlers(event)
+
+		fun onPlayerChat(event: PlayerChatEvent) {
+			Events.onPlayerChat.runHandlers(
+				WKPlayerChatEvent(
+					event.sender,
+					event.targets,
+					event.content
+				)
+			)
+		}
 
 		fun onPlayerSetupConnect(event: PlayerSetupConnectEvent) =
 			Events.onPlayerSetupConnect.runHandlers(event)
@@ -56,3 +67,8 @@ class WKPlayerReadyEvent(
 		return playerRef.ensureAndGetComponent(type)
 	}
 }
+
+class WKPlayerChatEvent(sender: PlayerRef, targets: List<PlayerRef>, content: String) : PlayerChatEvent(
+	sender, targets,
+	content
+)

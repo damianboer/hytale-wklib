@@ -19,6 +19,7 @@ class Events {
 		val onPlayerReady = EventManager.create<WKPlayerReadyEvent>()
 		val onPlayerConnect = EventManager.create<PlayerConnectEvent>()
 		val onPlayerDisconnect = EventManager.create<PlayerDisconnectEvent>()
+		val onPlayerChat = EventManager.create<WKPlayerChatEvent>()
 		val onPlayerSetupConnect = EventManager.create<PlayerSetupConnectEvent>()
 		val onPlayerSetupDisconnect = EventManager.create<PlayerSetupDisconnectEvent>()
 		val onPlayerAddedToWorld = EventManager.create<AddPlayerToWorldEvent>()
@@ -39,6 +40,7 @@ class Events {
 				{ reg -> reg.registerGlobal(PlayerReadyEvent::class.java, PlayerEvents::onPlayerReady) },
 				{ reg -> reg.registerGlobal(PlayerConnectEvent::class.java, PlayerEvents::onPlayerConnect) },
 				{ reg -> reg.registerGlobal(PlayerDisconnectEvent::class.java, PlayerEvents::onPlayerDisconnect) },
+				{ reg -> reg.registerGlobal(PlayerChatEvent::class.java, PlayerEvents::onPlayerChat) },
 				{ reg -> reg.registerGlobal(PlayerSetupConnectEvent::class.java, PlayerEvents::onPlayerSetupConnect) },
 				{ reg ->
 					reg.registerGlobal(
