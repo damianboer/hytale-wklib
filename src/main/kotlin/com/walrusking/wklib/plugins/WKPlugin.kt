@@ -19,11 +19,10 @@ open class WKPlugin(val pluginName: String, init: JavaPluginInit) : JavaPlugin(i
 		return this.withConfig(ConfigUtil.getConfigName(configName), CodecUtil.buildConfigCodec(T::class.java))
 	}
 
-	fun <T> getOrCreateConfig(
+	inline fun <reified T> getOrCreateConfig(
 		configName: String,
 		data: T,
-		codec: com.hypixel.hytale.codec.builder.BuilderCodec<T>
 	): Config<T> {
-		return ConfigUtil.getOrCreateConfig(this, configName, data, codec)
+		return ConfigUtil.getOrCreateConfig(this, configName, data)
 	}
 }

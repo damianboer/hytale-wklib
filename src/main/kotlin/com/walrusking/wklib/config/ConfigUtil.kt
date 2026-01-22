@@ -1,9 +1,9 @@
 ﻿package com.walrusking.wklib.config
 
-import com.hypixel.hytale.codec.builder.BuilderCodec
 import com.hypixel.hytale.server.core.util.Config
 import com.walrusking.wklib.logging.WKLogger
 import com.walrusking.wklib.plugins.WKPlugin
+import com.walrusking.wklib.utilities.CodecUtil
 import java.lang.reflect.Modifier
 import java.nio.file.Path
 import java.util.Locale.getDefault
@@ -14,12 +14,12 @@ class ConfigUtil {
 			return configName.replace(" ", "").lowercase(getDefault())
 		}
 
-		fun <T> getOrCreateConfig(plugin: WKPlugin, configName: String, data: T, codec: BuilderCodec<T>): Config<T> {
-			return getOrCreateConfig(plugin.dataDirectory, configName, data, codec)
+		inline fun <reified T> getOrCreateConfig(plugin: WKPlugin, configName: String, data: T): Config<T> {
+			return getOrCreateConfig(plugin.dataDirectory, configName, data)
 		}
 
-		fun <T> getOrCreateConfig(path: Path, configName: String, data: T, codec: BuilderCodec<T>): Config<T> {
-			val config = Config<T>(path, getConfigName(configName), codec)
+		inline fun <reified T> getOrCreateConfig(path: Path, configName: String, data: T): Config<T> {
+			val config = Config<T>(path, getConfigName(configName), CodecUtil.buildConfigCodec(T::class.java))
 
 			loadConfig(path, configName, config, data)
 
