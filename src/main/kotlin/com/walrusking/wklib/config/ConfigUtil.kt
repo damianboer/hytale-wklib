@@ -1,8 +1,11 @@
 ﻿package com.walrusking.wklib.config
 
+import com.hypixel.hytale.codec.builder.BuilderCodec
 import com.hypixel.hytale.server.core.util.Config
 import com.walrusking.wklib.logging.WKLogger
 import com.walrusking.wklib.plugins.WKPlugin
+import java.lang.reflect.Modifier
+import java.nio.file.Path
 import java.util.Locale.getDefault
 
 class ConfigUtil {
@@ -11,19 +14,66 @@ class ConfigUtil {
 			return configName.replace(" ", "").lowercase(getDefault())
 		}
 
+		fun <T> getOrCreateConfig(plugin: WKPlugin, configName: String, data: T, codec: BuilderCodec<T>): Config<T> {
+			return getOrCreateConfig(plugin.dataDirectory, configName, data, codec)
+		}
+
+		fun <T> getOrCreateConfig(path: Path, configName: String, data: T, codec: BuilderCodec<T>): Config<T> {
+			val config = Config<T>(path, getConfigName(configName), codec)
+
+			loadConfig(path, configName, config, data)
+
+			return config
+		}
+
 		fun loadConfig(plugin: WKPlugin, config: Config<*>) {
 			val pluginName = plugin.pluginName
 
 			val configName = getConfigName(pluginName)
 			val dataDirectory = plugin.dataDirectory
-			val pluginConfig = dataDirectory.resolve("$configName.json").toFile()
+
+			loadConfig(dataDirectory, config, configName)
+		}
+
+		fun loadConfig(path: Path, config: Config<*>, configName: String) {
+			val configName = getConfigName(configName)
+			val pluginConfig = path.resolve("$configName.json").toFile()
+
+			config.load()
 
 			if (!pluginConfig.exists()) {
 				config.save()
-				WKLogger("WKLib:Configs").info("Created new config $pluginName")
+				WKLogger("WKLib:Configs").info("Created new config $configName")
 			} else {
-				config.load()
-				WKLogger("WKLib:Configs").info("Loaded existing config $pluginName")
+				WKLogger("WKLib:Configs").info("Loaded existing config $configName")
+			}
+		}
+
+		fun <T> loadConfig(path: Path, configName: String, config: Config<T>, data: T) {
+			val configName = getConfigName(configName)
+			val pluginConfig = path.resolve("$configName.json").toFile()
+
+			config.load()
+
+			if (!pluginConfig.exists()) {
+				val s = config.get()
+				s?.javaClass?.declaredFields?.forEach { field ->
+					if (Modifier.isStatic(field.modifiers)) {
+						return@forEach
+					}
+
+					field.trySetAccessible()
+
+					try {
+						field.set(s, field.get(data))
+					} catch (e: IllegalAccessException) {
+						e.printStackTrace()
+					}
+				}
+				config.save()
+				WKLogger("WKLib:Configs").info("Created new config $configName")
+			} else {
+				WKLogger("WKLib:Configs").info("Loaded existing config $configName")
 			}
 		}
 	}
