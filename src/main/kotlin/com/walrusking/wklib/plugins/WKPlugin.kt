@@ -9,13 +9,7 @@ import com.walrusking.wklib.utilities.CodecUtil
 
 
 open class WKPlugin(val pluginName: String, init: JavaPluginInit) : JavaPlugin(init) {
-	companion object {
-		lateinit var LOGGER: WKLogger
-	}
-
-	init {
-		LOGGER = WKLogger(pluginName)
-	}
+	val LOGGER = WKLogger(pluginName)
 
 	protected inline fun <reified T> withConfig(): Config<T> {
 		return this.withConfig(pluginName, CodecUtil.buildConfigCodec(T::class.java))
