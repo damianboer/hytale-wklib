@@ -14,14 +14,8 @@ class CodecUtil {
 			val clazz = component.javaClass
 			val builder = BuilderCodec.builder(clazz, getSupplierInstance(clazz))
 
-			for (field in clazz.declaredFields) {
-				if (Modifier.isStatic(field.modifiers)) {
-					continue
-				}
-
-				field.trySetAccessible()
-
-				val keyedCodec = getKeyedCodec(field) ?: continue
+			forEachField(clazz, includeSuper = false) { field ->
+				val keyedCodec = getKeyedCodec(field) ?: return@forEachField
 
 				val fieldBuilder = builder.append(keyedCodec, { instance, value ->
 					try {
@@ -49,14 +43,8 @@ class CodecUtil {
 		fun <T> buildConfigCodec(clazz: Class<T>): BuilderCodec<T> {
 			val builder = BuilderCodec.builder(clazz, getSupplierInstance(clazz))
 
-			for (field in clazz.declaredFields) {
-				if (Modifier.isStatic(field.modifiers)) {
-					continue
-				}
-
-				field.trySetAccessible()
-
-				val keyedCodec = getKeyedCodec(field) ?: continue
+			forEachField(clazz, includeSuper = true) { field ->
+				val keyedCodec = getKeyedCodec(field) ?: return@forEachField
 
 				val fieldBuilder = builder.append(keyedCodec, { instance, value ->
 					try {
@@ -77,6 +65,22 @@ class CodecUtil {
 			}
 
 			return builder.build()
+		}
+
+		private fun forEachField(clazz: Class<*>, includeSuper: Boolean = false, action: (Field) -> Unit) {
+			var current: Class<*>? = clazz
+			while (current != null && current != Any::class.java) {
+				for (field in current.declaredFields) {
+					if (Modifier.isStatic(field.modifiers)) {
+						continue
+					}
+					field.trySetAccessible()
+					action(field)
+				}
+
+				if (!includeSuper) break
+				current = current.superclass
+			}
 		}
 
 		@Suppress("UNCHECKED_CAST")
