@@ -25,19 +25,18 @@ javadoc {
     options.addStringOption('Xdoclint:-missing', '-quiet')
 }
 
-// Adds the Hytale server as a build dependency, allowing you to reference and
-// compile against their code. This requires you to have Hytale installed using
-// the official launcher for now.
 dependencies {
-    implementation(files("$hytaleHome/install/$patchline/package/game/latest/Server/HytaleServer.jar"))
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit5:2.3.0"
+    compileOnly "com.hypixel.hytale:Server:$hytale_version"
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    // Load any dependencies in the libs folder
+    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 repositories {
     mavenCentral()
+    maven() {
+        url = "https://maven.hytale.com/${patchline}"
+    }
     mavenLocal()
 }
 
@@ -70,23 +69,6 @@ tasks.named('processResources') {
 
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
-}
-
-// Creates a run configuration in IDEA that will run the Hytale server with
-// your plugin and the default assets.
-idea.project.settings.runConfigurations {
-    'HytaleServer'(org.jetbrains.gradle.ext.Application) {
-        mainClass = 'com.hypixel.hytale.Main'
-        moduleName = project.idea.module.name + '.main'
-        programParameters = "--allow-op --assets=$hytaleHome/install/$patchline/package/game/latest/Assets.zip"
-        if (includes_pack.toBoolean()) {
-            programParameters += " --mods=${sourceSets.main.java.srcDirs.first().parentFile.absolutePath}"
-        }
-        if (load_user_mods.toBoolean()) {
-            programParameters += " --mods=$hytaleHome/UserData/Mods"
-        }
-        workingDirectory = serverRunDir.absolutePath
-    }
 }
 
 tasks.withType(JavaCompile).configureEach {
