@@ -27,7 +27,8 @@ class CodecUtil {
 
 				val fieldBuilder = builder.append(keyedCodec, { instance, value ->
 					try {
-						field.set(instance, value)
+						val toSet = ensureMutableMap(value)
+						field.set(instance, toSet)
 					} catch (e: IllegalAccessException) {
 						e.printStackTrace()
 					}
@@ -61,7 +62,8 @@ class CodecUtil {
 
 				val fieldBuilder = builder.append(keyedCodec, { instance, value ->
 					try {
-						field.set(instance, value)
+						val toSet = ensureMutableMap(value)
+						field.set(instance, toSet)
 					} catch (e: IllegalAccessException) {
 						e.printStackTrace()
 					}
@@ -78,6 +80,17 @@ class CodecUtil {
 			}
 
 			return builder.build()
+		}
+
+		private fun ensureMutableMap(value: Any?): Any? {
+			if (value is Map<*, *>) {
+				val implName = value.javaClass.name
+				if (implName.contains("EmptyMap") || implName.contains("Unmodifiable") || implName.contains("Collections\$")) {
+					@Suppress("UNCHECKED_CAST")
+					return HashMap(value as Map<Any?, Any?>)
+				}
+			}
+			return value
 		}
 
 		private fun forEachField(clazz: Class<*>, includeSuper: Boolean = false, action: (Field) -> Unit) {
@@ -111,15 +124,15 @@ class CodecUtil {
 		}
 
 		private fun getType(type: Class<*>): CodecFieldType {
-			return when (type) {
-				UUID::class.java -> CodecFieldType.UUID
-				String::class.java -> CodecFieldType.STRING
-				Int::class.javaPrimitiveType, Int::class.javaObjectType -> CodecFieldType.INT
-				Double::class.javaPrimitiveType, Double::class.javaObjectType -> CodecFieldType.DOUBLE
-				Float::class.javaPrimitiveType, Float::class.javaObjectType -> CodecFieldType.FLOAT
-				Long::class.javaPrimitiveType, Long::class.javaObjectType -> CodecFieldType.LONG
-				Boolean::class.javaPrimitiveType, Boolean::class.javaObjectType -> CodecFieldType.BOOLEAN
-				Map::class.java, HashMap::class.java -> CodecFieldType.MAP
+			return when {
+				type == UUID::class.java -> CodecFieldType.UUID
+				type == String::class.java -> CodecFieldType.STRING
+				type == Int::class.javaPrimitiveType || type == Int::class.javaObjectType -> CodecFieldType.INT
+				type == Double::class.javaPrimitiveType || type == Double::class.javaObjectType -> CodecFieldType.DOUBLE
+				type == Float::class.javaPrimitiveType || type == Float::class.javaObjectType -> CodecFieldType.FLOAT
+				type == Long::class.javaPrimitiveType || type == Long::class.javaObjectType -> CodecFieldType.LONG
+				type == Boolean::class.javaPrimitiveType || type == Boolean::class.javaObjectType -> CodecFieldType.BOOLEAN
+				Map::class.java.isAssignableFrom(type) || type.name == "kotlin.collections.MutableMap" -> CodecFieldType.MAP
 				else -> CodecFieldType.NONE
 			}
 		}
@@ -195,9 +208,14 @@ class CodecUtil {
 				}
 			}
 
-			return MapCodec(valueCodec) { HashMap<String, Any?>() }
+			return MapCodec(valueCodec) {
+				try {
+					HashMap<String, Any?>()
+				} catch (e: Exception) {
+					HashMap<String, Any?>()
+				}
+			}
 		}
-
 
 		private fun <T> getSupplierInstance(clazz: Class<T>): Supplier<T> {
 			if (clazz.isInterface || Modifier.isAbstract(clazz.modifiers)) {
@@ -228,7 +246,38 @@ class CodecUtil {
 
 			return Supplier {
 				try {
-					clazz.getDeclaredConstructor().newInstance()
+					val instance = clazz.getDeclaredConstructor().newInstance()
+
+					var current: Class<*>? = clazz
+					while (current != null && current != Any::class.java) {
+						for (field in current.declaredFields) {
+							if (Modifier.isStatic(field.modifiers)) continue
+							try {
+								field.trySetAccessible()
+								val fType = field.type
+								if (Map::class.java.isAssignableFrom(fType) || fType.name == "kotlin.collections.MutableMap") {
+									val value = field.get(instance) as? Map<*, *>
+									if (value == null) {
+										@Suppress("UNCHECKED_CAST")
+										field.set(instance, HashMap<Any?, Any?>())
+									} else {
+										val implName = value.javaClass.name
+										if (implName.contains("EmptyMap") || implName.contains("Unmodifiable") || implName.contains(
+												"Collections\$"
+											)
+										) {
+											@Suppress("UNCHECKED_CAST")
+											field.set(instance, HashMap(value))
+										}
+									}
+								}
+							} catch (_: Exception) {
+							}
+						}
+						current = current.superclass
+					}
+
+					instance
 				} catch (e: Exception) {
 					throw RuntimeException("Failed to instantiate ${clazz.name}", e)
 				}
