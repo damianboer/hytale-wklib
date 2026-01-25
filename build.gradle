@@ -30,7 +30,7 @@ repositories {
 
 dependencies {
     compileOnly "com.hypixel.hytale:Server:$hytale_version"
-    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 
