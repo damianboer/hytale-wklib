@@ -5,7 +5,7 @@ import com.hypixel.hytale.component.query.Query
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore
 
-abstract class WKGlobalBlockEntityTickingSystem :
+abstract class WKBlockGlobalEntityTickingSystem :
 	EntityTickingSystem<ChunkStore>() {
 
 	override fun tick(
