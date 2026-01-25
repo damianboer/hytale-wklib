@@ -1,4 +1,4 @@
-﻿package com.walrusking.wklib.components
+﻿package com.walrusking.wklib.systems
 
 import com.hypixel.hytale.component.ArchetypeChunk
 import com.hypixel.hytale.component.CommandBuffer

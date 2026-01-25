@@ -1,9 +1,10 @@
-﻿package com.walrusking.wklib.components
+﻿package com.walrusking.wklib.systems
 
 import com.hypixel.hytale.component.*
 import com.hypixel.hytale.component.query.Query
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore
+import com.walrusking.wklib.components.Components
 
 abstract class WKBlockGlobalEntityTickingSystem :
 	EntityTickingSystem<ChunkStore>() {
@@ -74,7 +75,7 @@ class BlockEntityTickingData<T>(
 	commandBuffer,
 ) {
 	fun <Comp : Component<ChunkStore>> getComponent(componentId: String): Comp? {
-		val type = Components.getBlockType<Comp>(componentId) ?: return null
+		val type = Components.Companion.getBlockType<Comp>(componentId) ?: return null
 
 		return chunk.getComponent(index, type)
 	}
