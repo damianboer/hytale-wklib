@@ -33,6 +33,17 @@ open class WKEntityEventSystem<T : EcsEvent>(eventType: Class<T>) : EntityEventS
 		}
 	}
 
+	companion object {
+		inline fun <reified T> new(): WKEntityEventSystem<T> where T : EcsEvent {
+			val system = WKEntityEventSystem(T::class.java)
+			return system
+		}
+
+		fun <T : EcsEvent> new(eventType: Class<T>): WKEntityEventSystem<T> {
+			return WKEntityEventSystem(eventType)
+		}
+	}
+
 	open fun onExecute(data: EventData<T>) {
 
 	}
@@ -44,7 +55,7 @@ open class WKEntityEventSystem<T : EcsEvent>(eventType: Class<T>) : EntityEventS
 
 data class EventData<T : EcsEvent>(
 	val index: Int,
-	val type: ArchetypeChunk<EntityStore?>,
+	val chunk: ArchetypeChunk<EntityStore?>,
 	val store: Store<EntityStore?>,
 	val commandBuffer: CommandBuffer<EntityStore?>,
 	val event: T,
