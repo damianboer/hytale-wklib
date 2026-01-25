@@ -5,7 +5,7 @@ import com.hypixel.hytale.component.query.Query
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore
 import com.walrusking.wklib.components.Components
-import com.walrusking.wklib.systems.BaseEntityTickingData
+import com.walrusking.wklib.systems.entity.BaseEntityTickingData
 
 abstract class WKBlockEntityTickingSystem<T : Component<ChunkStore>>(val componentType: ComponentType<ChunkStore, T>) :
 	EntityTickingSystem<ChunkStore>() {
