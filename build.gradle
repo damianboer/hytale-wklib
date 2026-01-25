@@ -25,18 +25,12 @@ repositories {
     maven() {
         url = uri("https://maven.hytale.com/${patchline}")
     }
-    maven {
-        url = uri("https://www.cursemaven.com")
-    }
     mavenLocal()
 }
 
 dependencies {
     compileOnly "com.hypixel.hytale:Server:$hytale_version"
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    // Load any dependencies in the libs folder
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "curse.maven:hyui-1431415:7516306"
 }
 
 
