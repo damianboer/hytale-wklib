@@ -6,7 +6,7 @@ import com.hypixel.hytale.component.system.tick.EntityTickingSystem
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 
-open class WKEntityTickingSystem<T : Component<EntityStore>>(val componentType: ComponentType<EntityStore, T>) :
+abstract class WKEntityTickingSystem<T : Component<EntityStore>>(val componentType: ComponentType<EntityStore, T>) :
 	EntityTickingSystem<EntityStore>() {
 
 	override fun tick(
@@ -22,16 +22,14 @@ open class WKEntityTickingSystem<T : Component<EntityStore>>(val componentType: 
 		onTick(data)
 	}
 
-	open fun onTick(data: EntityTickingData<T, EntityStore>) {
-
-	}
+	abstract fun onTick(data: EntityTickingData<T, EntityStore>)
 
 	override fun getQuery(): Query<EntityStore> {
 		return Query.and(componentType)
 	}
 }
 
-open class WKBlockEntityTickingSystem<T : Component<ChunkStore>>(val componentType: ComponentType<ChunkStore, T>) :
+abstract class WKBlockEntityTickingSystem<T : Component<ChunkStore>>(val componentType: ComponentType<ChunkStore, T>) :
 	EntityTickingSystem<ChunkStore>() {
 
 	override fun tick(
@@ -47,9 +45,7 @@ open class WKBlockEntityTickingSystem<T : Component<ChunkStore>>(val componentTy
 		onTick(data)
 	}
 
-	open fun onTick(data: EntityTickingData<T, ChunkStore>) {
-
-	}
+	abstract fun onTick(data: EntityTickingData<T, ChunkStore>)
 
 	override fun getQuery(): Query<ChunkStore>? {
 		return Query.and(componentType)
