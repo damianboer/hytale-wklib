@@ -1,0 +1,10 @@
+- Guides
+    - [Commands](guides/commands.md)
+    - [Components](guides/components.md)
+    - [Configs](guides/configs.md)
+    - [Death Events](guides/death-events.md)
+    - [Events](guides/events.md)
+    - [Logging](guides/logging.md)
+    - [Persistent Player Data](guides/persistent-player-data.md)
+    - [Systems](guides/systems.md)
+    - [Text Formatting](guides/text-formatting.md)
