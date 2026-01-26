@@ -6,6 +6,14 @@ import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.component.system.tick.DelayedEntitySystem
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 
+/**
+ * Abstract class for creating global delayed entity systems.
+ *
+ * @constructor
+ * Creates a WKGlobalDelayedEntitySystem with the specified interval in seconds.
+ *
+ * @param intervalSec The interval in seconds at which the system should tick.
+ */
 abstract class WKGlobalDelayedEntitySystem(
 	intervalSec: Float
 ) :
@@ -22,5 +30,10 @@ abstract class WKGlobalDelayedEntitySystem(
 		onTick(data)
 	}
 
+	/**
+	 * Method to be overridden by subclasses to implement custom ticking logic.
+	 *
+	 * @param data The GlobalEntityTickingData containing information about the tick context.
+	 */
 	abstract fun onTick(data: GlobalEntityTickingData)
 }

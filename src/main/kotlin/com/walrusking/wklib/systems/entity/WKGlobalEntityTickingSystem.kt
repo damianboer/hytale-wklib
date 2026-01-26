@@ -6,6 +6,9 @@ import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore
 
+/**
+ * An abstract class that extends EntityTickingSystem to handle global entity ticking logic.
+ */
 abstract class WKGlobalEntityTickingSystem :
 	EntityTickingSystem<EntityStore>() {
 
@@ -20,9 +23,17 @@ abstract class WKGlobalEntityTickingSystem :
 		onTick(data)
 	}
 
+	/**
+	 * Method to be overridden by subclasses to implement custom global entity ticking logic.
+	 *
+	 * @param data The GlobalEntityTickingData containing information about the tick event and context.
+	 */
 	abstract fun onTick(data: GlobalEntityTickingData)
 }
 
+/**
+ * Data class encapsulating information about a global entity tick event.
+ */
 class GlobalEntityTickingData(
 	deltaTime: Float,
 	index: Int,

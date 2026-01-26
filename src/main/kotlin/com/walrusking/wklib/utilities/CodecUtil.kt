@@ -11,8 +11,18 @@ import java.lang.reflect.Modifier
 import java.util.*
 import java.util.function.Supplier
 
+/*
+ * Utility class for building codecs for WKBaseComponent and configuration classes.
+ */
 class CodecUtil {
 	companion object {
+		/**
+		 * Builds a BuilderCodec for the given WKBaseComponent instance.
+		 *
+		 * @param T The type of WKBaseComponent
+		 * @param component The WKBaseComponent instance to build the codec for
+		 * @return A BuilderCodec for the specified WKBaseComponent
+		 */
 		fun <T : WKBaseComponent<*>> buildComponentCodec(component: T): BuilderCodec<T> {
 			val clazz = component.javaClass
 			val builder = BuilderCodec.builder(clazz, getSupplierInstance(clazz))
@@ -49,6 +59,13 @@ class CodecUtil {
 			return builder.build()
 		}
 
+		/**
+		 * Builds a BuilderCodec for the given configuration class.
+		 *
+		 * @param T The type of the configuration class
+		 * @param clazz The Class object of the configuration class
+		 * @return A BuilderCodec for the specified configuration class
+		 */
 		fun <T> buildConfigCodec(clazz: Class<T>): BuilderCodec<T> {
 			val builder = BuilderCodec.builder(clazz, getSupplierInstance(clazz))
 

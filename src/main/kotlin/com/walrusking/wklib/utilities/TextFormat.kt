@@ -6,6 +6,10 @@ import java.awt.Color
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
+/**
+ * TextFormat is a utility class for formatting text with various styles and colors.
+ * It supports tags for bold, italic, underline, color, links, gradients, rainbows, and obfuscation.
+ */
 class TextFormat {
 	companion object {
 		val colors = mutableMapOf(
@@ -24,6 +28,22 @@ class TextFormat {
 			"brown" to Color(165, 42, 42)
 		)
 
+		/**
+		 * Formats the input string into a Message with styles and colors.
+		 *
+		 * Supported tags:
+		 * <b> or <bold> - Bold text
+		 * <i> or <italic> - Italic text
+		 * <u> or <underline> - Underlined text
+		 * <c=value> or <color=value> - Colored text (hex, rgb, or named color)
+		 * <a=value> or <link=value> - Hyperlink text
+		 * <gradient colors=value1,value2,...> - Gradient colored text
+		 * <rainbow> - Rainbow colored text
+		 * <o>, <obfuscated>, or <obf> - Obfuscated text
+		 *
+		 * @param input The input string with formatting tags.
+		 * @return A Message object with the applied formatting.
+		 */
 		fun format(input: String): Message {
 			val lexer = TextLexer()
 			val tokens = lexer.tokenize(input)
@@ -32,6 +52,12 @@ class TextFormat {
 			return parser.parse(tokens)
 		}
 
+		/**
+		 * Adds a named color to the color map.
+		 *
+		 * @param name The name of the color.
+		 * @param color The Color object.
+		 */
 		fun addColor(name: String, color: Color) {
 			colors[name.lowercase()] = color
 		}

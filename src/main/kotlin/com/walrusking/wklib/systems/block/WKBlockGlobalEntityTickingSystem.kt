@@ -6,6 +6,9 @@ import com.hypixel.hytale.component.Store
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore
 
+/**
+ * An abstract system for ticking block global entities within chunks.
+ */
 abstract class WKBlockGlobalEntityTickingSystem :
 	EntityTickingSystem<ChunkStore>() {
 
@@ -20,5 +23,10 @@ abstract class WKBlockGlobalEntityTickingSystem :
 		onTick(data)
 	}
 
+	/**
+	 * Method to be overridden by subclasses to implement custom ticking logic for block global entities.
+	 *
+	 * @param data The BlockGlobalEntityTickingData containing information about the tick context.
+	 */
 	abstract fun onTick(data: BlockGlobalEntityTickingData)
 }

@@ -8,16 +8,43 @@ import java.lang.reflect.Modifier
 import java.nio.file.Path
 import java.util.Locale.getDefault
 
+/**
+ * Utility class for managing configuration files.
+ */
 class ConfigUtil {
 	companion object {
+		/**
+		 * Formats the configuration name by removing spaces and converting to lowercase.
+		 *
+		 * @param configName The original configuration name.
+		 * @return The formatted configuration name.
+		 */
 		fun getConfigName(configName: String): String {
 			return configName.replace(" ", "").lowercase(getDefault())
 		}
 
+		/**
+		 * Retrieves or creates a configuration file for the given plugin.
+		 *
+		 * @param T The type of the configuration data extending WKConfig.
+		 * @param plugin The plugin for which the configuration is to be managed.
+		 * @param configName The name of the configuration file.
+		 * @param data The default configuration data.
+		 * @return The Config object representing the configuration file.
+		 */
 		inline fun <reified T : WKConfig> getOrCreateConfig(plugin: WKPlugin, configName: String, data: T): Config<T> {
 			return getOrCreateConfig(plugin.dataDirectory, configName, data)
 		}
 
+		/**
+		 * Retrieves or creates a configuration file at the specified path.
+		 *
+		 * @param T The type of the configuration data extending WKConfig.
+		 * @param path The path where the configuration file is located.
+		 * @param configName The name of the configuration file.
+		 * @param data The default configuration data.
+		 * @return The Config object representing the configuration file.
+		 */
 		inline fun <reified T : WKConfig> getOrCreateConfig(path: Path, configName: String, data: T): Config<T> {
 			val config = Config<T>(path, getConfigName(configName), CodecUtil.buildConfigCodec(T::class.java))
 
@@ -26,6 +53,12 @@ class ConfigUtil {
 			return config
 		}
 
+		/**
+		 * Loads the configuration for the given plugin.
+		 *
+		 * @param plugin The plugin for which the configuration is to be loaded.
+		 * @param config The Config object representing the configuration file.
+		 */
 		fun loadConfig(plugin: WKPlugin, config: Config<*>) {
 			val pluginName = plugin.pluginName
 
@@ -35,6 +68,13 @@ class ConfigUtil {
 			loadConfig(dataDirectory, config, configName)
 		}
 
+		/**
+		 * Loads the configuration from the specified path.
+		 *
+		 * @param path The path where the configuration file is located.
+		 * @param config The Config object representing the configuration file.
+		 * @param configName The name of the configuration file.
+		 */
 		fun loadConfig(path: Path, config: Config<*>, configName: String) {
 			val configName = getConfigName(configName)
 			val pluginConfig = path.resolve("$configName.json").toFile()
@@ -49,6 +89,15 @@ class ConfigUtil {
 			}
 		}
 
+		/**
+		 * Loads and upgrades the configuration if necessary.
+		 *
+		 * @param T The type of the configuration data extending WKConfig.
+		 * @param path The path where the configuration file is located.
+		 * @param configName The name of the configuration file.
+		 * @param config The Config object representing the configuration file.
+		 * @param data The default configuration data.
+		 */
 		fun <T : WKConfig> loadConfig(path: Path, configName: String, config: Config<T>, data: T) {
 			val cfgName = getConfigName(configName)
 			val pluginConfig = path.resolve("$cfgName.json").toFile()
