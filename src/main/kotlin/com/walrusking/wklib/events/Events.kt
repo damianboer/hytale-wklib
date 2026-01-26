@@ -23,7 +23,7 @@ class Events {
 		private var eventRegistry: EventRegistry? = null
 		private var entityStoreRegistry: ComponentRegistryProxy<EntityStore>? = null
 
-		val onShutdown = EventManager.create<ShutdownEvent>()
+		val onShutdown = EventManager.create<Any>()
 		val onTreasureChestOpening = EventManager.create<TreasureChestOpeningEvent>()
 		val onWorldAdded = EventManager.create<AddWorldEvent>()
 		var onWorldRemoved = EventManager.create<RemoveWorldEvent>()

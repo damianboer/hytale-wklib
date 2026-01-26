@@ -10,7 +10,7 @@ class GameEvents {
 	companion object {
 		/** Handles the ShutdownEvent by running all registered handlers. */
 		fun onShutdown(event: ShutdownEvent?) =
-			Events.onShutdown.runHandlers(event)
+			Events.onShutdown.runHandlersNullable(event)
 
 		/** Handles the TreasureChestOpeningEvent by running all registered handlers. */
 		fun onTreasureChestOpening(event: TreasureChestOpeningEvent) =

@@ -9,14 +9,14 @@ import java.util.function.Consumer
  * @property eventClass The class of the event type.
  */
 class EventManager<T : Any>(val eventClass: Class<T>) {
-	val handlers: MutableList<Consumer<T?>> = mutableListOf()
+	val handlers: MutableList<Consumer<T>> = mutableListOf()
 
 	/**
 	 * Registers a new event handler.
 	 *
 	 * @param handler The event handler to register.
 	 */
-	fun register(handler: Consumer<T?>) {
+	fun register(handler: Consumer<T>) {
 		handlers.add(handler)
 	}
 
@@ -25,9 +25,20 @@ class EventManager<T : Any>(val eventClass: Class<T>) {
 	 *
 	 * @param event The event to pass to the handlers.
 	 */
-	fun runHandlers(event: T?) {
+	fun runHandlers(event: T) {
 		for (handler in handlers) {
 			handler.accept(event)
+		}
+	}
+
+	/**
+	 * Runs all registered event handlers with the given nullable event.
+	 *
+	 * @param event The nullable event to pass to the handlers.
+	 */
+	fun runHandlersNullable(event: T?) {
+		for (handler in handlers) {
+			handler.accept(event!!)
 		}
 	}
 
