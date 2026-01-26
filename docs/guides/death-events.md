@@ -1,9 +1,9 @@
 ﻿## Creating Death Event
 
-You can create a new death event by extending `WKOnDeathSystem`:
+You can create a new death event by extending `WKDeathSystem`:
 
 ```kotlin
-class TestDeathEvent : WKOnDeathSystem() {
+class TestDeathEvent : WKDeathSystem() {
 	override fun onDeath(event: WKOnDeathEvent) {
 		val deathInfo = event.deathInfo
 
@@ -31,6 +31,17 @@ class TestDeathEvent : WKPlayerDeathSystem() {
 	override fun onDeath(event: WKPlayerDeathEvent) {
 		WKLogger("PlayerDeath").info("${event.player?.displayName} has died!")
 	}
+}
+```
+
+## Creating NPC Death Event
+You can create a new death event by extending `WKNPCDeathSystem`:
+
+```kotlin
+class TestDeathEvent : WKNPCDeathSystem() {
+    override fun onDeath(event: WKNPCDeathEvent) {
+        WKLogger("NPCDeath").info("An NPC has died!")
+    }
 }
 ```
 
