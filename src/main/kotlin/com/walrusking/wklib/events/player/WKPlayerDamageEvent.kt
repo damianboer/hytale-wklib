@@ -11,7 +11,7 @@ import com.walrusking.wklib.events.WKDamageEventData
  *
  * This is an ECS system.
  */
-class WKPlayerDamageEvent : WKDamageEvent() {
+open class WKPlayerDamageEvent : WKDamageEvent() {
 	/**
 	 * Method to be overridden by subclasses to implement custom damage event handling logic.
 	 *
