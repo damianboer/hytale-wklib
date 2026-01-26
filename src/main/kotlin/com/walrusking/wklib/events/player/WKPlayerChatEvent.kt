@@ -2,7 +2,6 @@
 
 import com.hypixel.hytale.server.core.event.events.player.PlayerChatEvent
 import com.hypixel.hytale.server.core.universe.PlayerRef
-import com.walrusking.wklib.helpers.getPlayer
 
 /**
  * Event triggered when a player sends a chat message.
@@ -11,10 +10,12 @@ import com.walrusking.wklib.helpers.getPlayer
  * @param targets The list of players receiving the chat message.
  * @param content The content of the chat message.
  */
-class WKPlayerChatEvent(sender: PlayerRef, targets: List<PlayerRef>, content: String) : PlayerChatEvent(
-	sender, targets,
+class WKPlayerChatEvent(
+	sender: PlayerRef,
+	targets: List<PlayerRef>,
+	content: String
+) : PlayerChatEvent(
+	sender,
+	targets,
 	content
-) {
-	/** The player who sent the chat message. */
-	val player = sender.getPlayer()
-}
+)
