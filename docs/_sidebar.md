@@ -2,6 +2,7 @@
     - [Commands](guides/commands.md)
     - [Components](guides/components.md)
     - [Configs](guides/configs.md)
+    - [Damage Events](guides/damage-events.md)
     - [Death Events](guides/death-events.md)
     - [Events](guides/events.md)
     - [Logging](guides/logging.md)
