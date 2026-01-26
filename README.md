@@ -2,4 +2,4 @@
 
 ## Documentation
 
-The documentation can be accessed [here](https://github.com/jacobc16/hytale-wklib/wiki).
+The documentation can be accessed [here](https://jacobc16.github.io/hytale-wklib).
