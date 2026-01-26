@@ -43,4 +43,4 @@ override fun setup() {
     Events.registerSystem(TestPlayerDamageEvent())
     Events.registerSystem(TestNPCDamageEvent())
 }
-
+```
