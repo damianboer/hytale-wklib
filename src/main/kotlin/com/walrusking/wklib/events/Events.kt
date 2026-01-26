@@ -26,7 +26,7 @@ class Events {
 		val onShutdown = EventManager.create<Any>()
 		val onTreasureChestOpening = EventManager.create<TreasureChestOpeningEvent>()
 		val onWorldAdded = EventManager.create<AddWorldEvent>()
-		var onWorldRemoved = EventManager.create<RemoveWorldEvent>()
+		val onWorldRemoved = EventManager.create<RemoveWorldEvent>()
 		val onWorldStarted = EventManager.create<StartWorldEvent>()
 
 		val onPlayerReady = EventManager.create<WKPlayerReadyEvent>()
